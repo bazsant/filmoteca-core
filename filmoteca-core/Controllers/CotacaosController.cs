@@ -22,9 +22,38 @@ namespace filmoteca_core.Controllers
 
         // GET: api/Cotacaos
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Cotacao>>> GetCotacao()
+        public List<Cotacao2> GetCotacao()
         {
-            return await _context.Cotacao.ToListAsync();
+            var lista = _context.Cotacao.ToList();
+
+            var listaAux = new List<Cotacao2>();
+
+            lista.ForEach(x =>
+            {
+                listaAux.Add(new Cotacao2()
+                {
+                    CdCotacao = x.CdCotacao,
+                    CdFilme = x.CdFilme,
+                    CdPessoa = x.CdPessoa,
+                    DsTitulo = _context.Filme.Where(y => y.CdFilme == x.CdFilme).FirstOrDefault().DsTitulo,
+                    DtEntrega = x.DtEntrega,
+                    NmPessoa = _context.Pessoa.Where(y => y.CdPessoa == x.CdPessoa).FirstOrDefault().NmPessoa,
+                    VlValor = x.VlValor
+                });
+            });
+            
+            return listaAux;
+        }
+
+        public class Cotacao2
+        {
+            public int CdCotacao { get; set; }
+            public int CdFilme { get; set; }
+            public string DsTitulo { get; set; }
+            public int CdPessoa { get; set; }
+            public string NmPessoa { get; set; }
+            public decimal VlValor { get; set; }
+            public DateTime DtEntrega { get; set; }
         }
 
         // GET: api/Cotacaos/5
