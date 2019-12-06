@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using filmoteca_core.Models;
+using System;
 
 namespace filmoteca_core.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CotacaosController : ControllerBase
+    public partial class CotacaosController : ControllerBase
     {
         private readonly FILMOTECAContext _context;
 
@@ -38,23 +38,14 @@ namespace filmoteca_core.Controllers
                     DsTitulo = _context.Filme.Where(y => y.CdFilme == x.CdFilme).FirstOrDefault().DsTitulo,
                     DtEntrega = x.DtEntrega,
                     NmPessoa = _context.Pessoa.Where(y => y.CdPessoa == x.CdPessoa).FirstOrDefault().NmPessoa,
-                    VlValor = x.VlValor
+                    VlValor = x.VlValor,
+                    DtEntregaPrevista = x.DtEntregaPrevista
                 });
             });
-            
+
             return listaAux;
         }
 
-        public class Cotacao2
-        {
-            public int CdCotacao { get; set; }
-            public int CdFilme { get; set; }
-            public string DsTitulo { get; set; }
-            public int CdPessoa { get; set; }
-            public string NmPessoa { get; set; }
-            public decimal VlValor { get; set; }
-            public DateTime DtEntrega { get; set; }
-        }
 
         // GET: api/Cotacaos/5
         [HttpGet("{id}")]
@@ -68,6 +59,15 @@ namespace filmoteca_core.Controllers
             }
 
             return cotacao;
+        }
+
+        // GET: api/Cotacaos/5
+        [HttpGet("cliente/{id}")]
+        public async Task<ActionResult<IEnumerable<Cotacao>>> GetCotacaoByCliente(int id)
+        {
+            var cotacao = _context.Cotacao.Where(x => x.CdPessoa == id && !x.FlEntregue);
+
+            return await cotacao.ToListAsync();
         }
 
         // PUT: api/Cotacaos/5
@@ -106,13 +106,49 @@ namespace filmoteca_core.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Cotacao>> PostCotacao(Cotacao cotacao)
+        public async Task<IActionResult> PostCotacao(Cotacao cotacao)
         {
             _context.Cotacao.Add(cotacao);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetCotacao", new { id = cotacao.CdCotacao }, cotacao);
         }
+
+        // POST: api/Cotacaos
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
+        [HttpPost("devolver")]
+        public async Task<ActionResult<int>> PostCotacaoDevolver(List<CotacaoValor> cotacoes)
+        {
+
+
+            var cotacaoList = _context.Cotacao.Where(x => cotacoes.Exists(y => y.CdCotacao == x.CdCotacao)).ToList();
+
+            cotacaoList.ForEach(x =>
+            {
+                x.DtEntrega = DateTime.Now;
+                x.FlEntregue = true;
+                x.VlValor = cotacoes.Where(y => y.CdCotacao == x.CdCotacao).FirstOrDefault().VlValor;
+
+                var filme = _context.Filme.Where(y => y.CdFilme == x.CdFilme).FirstOrDefault();
+
+                filme.VlEstoque += 1;
+
+                _context.Entry(filme).State = EntityState.Modified;
+                _context.Entry(x).State = EntityState.Modified;
+            });
+
+            try
+            {
+                return await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+
+        }
+
 
         // DELETE: api/Cotacaos/5
         [HttpDelete("{id}")]

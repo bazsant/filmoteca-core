@@ -15,8 +15,7 @@ namespace filmoteca_core.Models
         {
         }
 
-        public virtual DbSet<Cotacao> Cotacao { get; set; }
-        public virtual DbSet<Estoque> Estoque { get; set; }
+        public virtual DbSet<Cotacao> Cotacao { get; set; }        
         public virtual DbSet<Filme> Filme { get; set; }
         public virtual DbSet<Parametrizacao> Parametrizacao { get; set; }
         public virtual DbSet<Perfil> Perfil { get; set; }
@@ -38,9 +37,17 @@ namespace filmoteca_core.Models
 
                 entity.Property(e => e.CdPessoa).HasColumnName("CD_PESSOA");
 
+                entity.Property(e => e.DtEntregaPrevista)
+                    .HasColumnName("DT_ENTREGA_PREVISTA")
+                    .HasColumnType("date");
+
                 entity.Property(e => e.DtEntrega)
                     .HasColumnName("DT_ENTREGA")
                     .HasColumnType("date");
+
+                entity.Property(e => e.FlEntregue)
+                    .HasColumnName("FL_ENTREGUE")
+                    .HasColumnType("bit");
 
                 entity.Property(e => e.VlValor)
                     .HasColumnName("VL_VALOR")
@@ -59,25 +66,7 @@ namespace filmoteca_core.Models
                     .HasConstraintName("FK_COTACAO_PESSOA");
             });
 
-            modelBuilder.Entity<Estoque>(entity =>
-            {
-                entity.HasKey(e => e.CdFilme);
-
-                entity.ToTable("ESTOQUE");
-
-                entity.Property(e => e.CdFilme)
-                    .HasColumnName("CD_FILME")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.VlQuantidade).HasColumnName("VL_QUANTIDADE");
-
-                entity.HasOne(d => d.CdFilmeNavigation)
-                    .WithOne(p => p.Estoque)
-                    .HasForeignKey<Estoque>(d => d.CdFilme)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ESTOQUE_FILME");
-            });
-
+            
             modelBuilder.Entity<Filme>(entity =>
             {
                 entity.HasKey(e => e.CdFilme);
@@ -114,6 +103,10 @@ namespace filmoteca_core.Models
                 entity.Property(e => e.DtLancamento)
                     .HasColumnName("DT_LANCAMENTO")
                     .HasColumnType("date");
+
+                entity.Property(e => e.VlEstoque)
+                    .HasColumnName("VL_ESTOQUE")
+                    .HasColumnType("int");
             });
 
             modelBuilder.Entity<Parametrizacao>(entity =>

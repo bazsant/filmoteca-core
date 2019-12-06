@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29509.3
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.489
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "filmoteca-core", "filmoteca-core\filmoteca-core.csproj", "{B63F3E63-FE77-4EFD-90C1-B2B2DC731C19}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "filmoteca-core", "filmoteca-core\filmoteca-core.csproj", "{C0A3F49D-4FEF-40DA-898D-33F11B353B91}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B63F3E63-FE77-4EFD-90C1-B2B2DC731C19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B63F3E63-FE77-4EFD-90C1-B2B2DC731C19}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B63F3E63-FE77-4EFD-90C1-B2B2DC731C19}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B63F3E63-FE77-4EFD-90C1-B2B2DC731C19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0A3F49D-4FEF-40DA-898D-33F11B353B91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0A3F49D-4FEF-40DA-898D-33F11B353B91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0A3F49D-4FEF-40DA-898D-33F11B353B91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0A3F49D-4FEF-40DA-898D-33F11B353B91}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {A84921D8-5CBD-4CA8-B0BF-8004CEC87FC4}
+		SolutionGuid = {F96271C4-6FFA-495D-B521-B5B56D703F1F}
 	EndGlobalSection
 EndGlobal

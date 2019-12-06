@@ -41,6 +41,66 @@ namespace filmoteca_core.Controllers
             return filme;
         }
 
+
+
+        // GET: api/Filmes/diminuirEstoque/5
+        [HttpGet("diminuirEstoque/{id}")]
+        public async Task<IActionResult> DiminuirEstoque(int id)
+        {
+            var filme = await _context.Filme.FindAsync(id);
+
+            filme.VlEstoque -= 1;
+
+            _context.Entry(filme).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!FilmeExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        // GET: api/Filmes/filmeDevolvido/5
+        [HttpGet("filmeDevolvido/{id}")]
+        public async Task<IActionResult> FilmeDevolvido(int id)
+        {
+            var filme = await _context.Filme.FindAsync(id);
+
+            filme.VlEstoque += 1;
+
+            _context.Entry(filme).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!FilmeExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
         // PUT: api/Filmes/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
@@ -83,6 +143,17 @@ namespace filmoteca_core.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetFilme", new { id = filme.CdFilme }, filme);
+        }
+
+        // POST: api/Filmes
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
+        [HttpPost("ids")]
+        public async Task<ActionResult<IEnumerable<Filme>>> GetByIds(int[] filmes)
+        {
+            var lista = from p in _context.Filme where filmes.Contains(p.CdFilme) select p;
+
+            return await lista.ToListAsync();
         }
 
         // DELETE: api/Filmes/5

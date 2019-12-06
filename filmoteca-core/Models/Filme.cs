@@ -17,8 +17,7 @@ namespace filmoteca_core.Models
         public string DsGenero { get; set; }
         public string DsEstudio { get; set; }
         public DateTime? DtLancamento { get; set; }
-
-        public virtual Estoque Estoque { get; set; }
+        public int VlEstoque { get; set; }
         public virtual ICollection<Cotacao> Cotacao { get; set; }
     }
 }
